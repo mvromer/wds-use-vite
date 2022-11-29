@@ -4,10 +4,21 @@
   "description": "Web Dev Server middleware that uses Vite to transform and serve requests.",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "mocha"
   },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mvromer/wds-use-vite.git"
