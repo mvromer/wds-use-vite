@@ -1,5 +1,5 @@
 {
-  "name": "wds-middleware-use-vite",
+  "name": "wds-use-vite",
   "version": "0.1.0",
   "description": "Web Dev Server middleware that uses Vite to transform and serve requests.",
   "type": "module",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mvromer/wds-middleware-use-vite.git"
+    "url": "git+https://github.com/mvromer/wds-use-vite.git"
   },
   "keywords": [
     "wds",
@@ -21,9 +21,9 @@
   "author": "Michael Romer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mvromer/wds-middleware-use-vite/issues"
+    "url": "https://github.com/mvromer/wds-use-vite/issues"
   },
-  "homepage": "https://github.com/mvromer/wds-middleware-use-vite#readme",
+  "homepage": "https://github.com/mvromer/wds-use-vite#readme",
   "dependencies": {
     "koa-connect": "^2.1.0"
   },
