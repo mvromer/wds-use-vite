@@ -22,6 +22,6 @@ jobs:
     - name: Build wds-use-vite
       run: npm run build
     - name: Publish wds-use-vite ${{ inputs.version }}
-      run: npm publish --dry-run
+      run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
