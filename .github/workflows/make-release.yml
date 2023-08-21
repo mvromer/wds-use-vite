@@ -17,6 +17,8 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
+    - name: Install dependencies
+      run: npm install
     - name: Set package version
       run: npm version --no-git-tag-version ${{ inputs.version }}
     - name: Build wds-use-vite
