@@ -1,0 +1,27 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version
+        required: true
+        type: string
+
+name: Make Release
+run-name: Releasing v${{ inputs.version }}
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Set package version
+      run: npm version --no-git-tag-version ${{ inputs.version }}
+    - name: Build wds-use-vite
+      run: npm run build
+    - name: Publish wds-use-vite ${{ inputs.version }}
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}

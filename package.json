@@ -13,8 +13,7 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "mocha"
+    "build": "tsc"
   },
   "files": [
     "dist"
@@ -46,10 +45,10 @@
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.8.0",
     "typescript": "^4.9.3",
-    "vite": "^3.2.4"
+    "vite": "^4.4.9"
   },
   "peerDependencies": {
-    "vite": "3",
+    "vite": "3 || 4",
     "@web/dev-server": "0.1"
   },
   "prettier": {
