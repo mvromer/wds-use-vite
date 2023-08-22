@@ -3,6 +3,10 @@ import { URL } from 'url';
 import { createServer } from 'vite';
 
 import type { Middleware } from 'koa';
+import type { ViteDevServer } from 'vite';
+
+// Vite server instance we will connect to WTR's middleware pipeline.
+let viteServer: ViteDevServer | null = null;
 
 function requestingModernWebVirtualModule(requestPath: string) {
   return (
@@ -11,33 +15,49 @@ function requestingModernWebVirtualModule(requestPath: string) {
   );
 }
 
+/**
+ * Add a plugin that will initialize the Vite server in middleware mode when WTR's server starts.
+ */
+export function addVite() {
+  return {
+    name: 'wds-use-vite:add-vite',
+
+    async serverStart() {
+      if (!viteServer) {
+        viteServer = await createServer({
+          clearScreen: false,
+          appType: 'custom',
+          server: {
+            middlewareMode: true,
+          },
+          plugins: [
+            {
+              name: 'wds-use-vite:resolve',
+              resolveId(moduleId) {
+                // We cannot resolve WDS and WTR modules because they are actually virtual modules created
+                // by the WDS instance. Treat the imports as external from Vite's perspective so that WDS
+                // can resolve them.
+                if (requestingModernWebVirtualModule(moduleId)) {
+                  return { id: moduleId, external: true };
+                }
+              },
+            },
+          ],
+        });
+      }
+    },
+  };
+}
+
+/**
+ * Create a WTR middleware that will forward any request that doesn't correspond to a Modern Web
+ * virtual module to the Vite server created via the wds-use-vite:add-vite plugin for WTR.
+ */
 export function useVite(): Middleware {
   let wrappedViteMiddleware: Middleware;
 
   return async function useViteMiddleware(context, next) {
-    if (!wrappedViteMiddleware) {
-      const viteServer = await createServer({
-        clearScreen: false,
-        appType: 'custom',
-        server: {
-          middlewareMode: true,
-        },
-        plugins: [
-          {
-            name: 'wds-use-vite:resolve',
-
-            resolveId(moduleId) {
-              // We cannot resolve WDS and WTR modules because they are actually virtual modules created
-              // by the WDS instance. Treat the imports as external from Vite's perspective so that WDS
-              // can resolve them.
-              if (requestingModernWebVirtualModule(moduleId)) {
-                return { id: moduleId, external: true };
-              }
-            },
-          },
-        ],
-      });
-
+    if (viteServer && !wrappedViteMiddleware) {
       wrappedViteMiddleware = koaConnect(viteServer.middlewares);
     }
 
