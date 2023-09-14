@@ -48,12 +48,6 @@ export function addVite() {
         viteServer = await createServer({
           clearScreen: false,
           appType: 'custom',
-          optimizeDeps: {
-            // It doesn't seem like this is strictly necessary, but it will help avoid Vite trying
-            // to optimize dependencies and creating bundled modules on the fly while tests are
-            // running under WTR.
-            disabled: true,
-          },
           server: {
             middlewareMode: true,
           },
