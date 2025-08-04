@@ -1,6 +1,6 @@
 {
   "name": "wds-use-vite",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Web Dev Server middleware that uses Vite to transform and serve requests.",
   "type": "module",
   "main": "dist/index.js",
