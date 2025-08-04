@@ -5,6 +5,8 @@ transformed and served using Vite. Rather than starting Vite's dev server alongs
 proxying requests to it, this will install Vite as a middleware component inside the WDS/WTR request
 pipeline.
 
+Compatible with Vite 3, 4, 5, and 6.
+
 ## Installation
 
 ```sh
