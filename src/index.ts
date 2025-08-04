@@ -37,15 +37,18 @@ function isModernWebRequest(requestUrl: URL) {
 }
 
 /**
- * Add a plugin that will initialize the Vite server in middleware mode when WDS/WTR starts.
+ * Add a plugin that will initialize the Vite server in middleware mode when WDS/WTR starts. A
+ * Vite config file can optionally be given. If not specified, Vite will resolve the config file
+ * automatically based on the current working directory.
  */
-export function addVite() {
+export function addVite(viteConfigFile?: string) {
   return {
     name: 'wds-use-vite:add-vite',
 
     async serverStart() {
       if (!viteServer) {
         viteServer = await createServer({
+          configFile: viteConfigFile,
           clearScreen: false,
           appType: 'custom',
           server: {
@@ -103,10 +106,12 @@ export function useVite(): Middleware {
     // unexpected query parameters are present.
     requestUrl.searchParams.delete(WTR_SESSION_PARAMETER);
 
-    // Call Vite middleware with the path + query segment of the modified request URL. Before
-    // returning, restore the request URL on the context object so downstream middleware can
-    // process its original value.
-    context.req.url = `${requestUrl.pathname}${requestUrl.search}`;
+    // If Vite has been configured to expect a certain base URL, then ensure we apply it before
+    // forwarding the request to the Vite middleware. Call Vite middleware with the path + query
+    // segment of the modified request URL. Before returning, restore the request URL on the context
+    // object so downstream middleware can process its original value.
+    const viteBase = viteServer?.config.base?.slice(0, -1) ?? '';
+    context.req.url = `${viteBase}${requestUrl.pathname}${requestUrl.search}`;
     await wrappedViteMiddleware(context, next);
     context.req.url = originalRequestUrl;
   };
